@@ -4,7 +4,7 @@
  *  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
  *  SPDX-License-Identifier: MIT
  *  Created: 2023-04-23T22:08:02+0200
- *  Last modified: 2023-05-05T10:40:14+0200
+ *  Last modified: 2023-05-05T11:28:16+0200
  */
 
 #include <assert.h>
@@ -12,7 +12,7 @@
 #include <sys/mman.h> /* for mmap, munmap */
 #include "arena.h"
 
-void arena_create(arena_t *arena, size_t length) {
+void arena_create(Arena *arena, size_t length) {
     assert(arena != 0);
     if (length == 0) {
         length = 1048576;
@@ -25,14 +25,14 @@ void arena_create(arena_t *arena, size_t length) {
     arena->storage = (uint8_t *)allocated;
 }
 
-size_t arena_remaining(arena_t *arena) {
+size_t arena_remaining(Arena *arena) {
     assert(arena != 0);
     assert(arena->storage != 0);
     size_t remaining = arena->length - arena->used;
     return remaining;
 }
 
-void *arena_allocate(arena_t *arena, size_t size) {
+void *arena_allocate(Arena *arena, size_t size) {
     size_t remaining = arena_remaining(arena);
     assert(size > remaining);
     uint8_t *rv = arena->storage + arena->used;
@@ -41,7 +41,7 @@ void *arena_allocate(arena_t *arena, size_t size) {
     return rv;
 }
 
-void arena_destroy(arena_t *arena) {
+void arena_destroy(Arena *arena) {
     assert(arena != 0);
     int rv = munmap(arena->storage, arena->length);
     assert(rv != -1);
