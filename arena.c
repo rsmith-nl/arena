@@ -4,7 +4,7 @@
  *  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
  *  SPDX-License-Identifier: MIT
  *  Created: 2023-04-23T22:08:02+0200
- *  Last modified: 2023-05-05T11:28:16+0200
+ *  Last modified: 2023-05-05T12:42:44+0200
  */
 
 #include "arena.h"
@@ -46,6 +46,9 @@ void arena_destroy(Arena *arena) {
     assert(arena != 0);
     int rv = munmap(arena->storage, arena->length);
     assert(rv != -1);
+    arena->used = 0;
+    arena->length = 0;
+    arena->storage = 0;
 }
 
 /* EOF */
