@@ -4,13 +4,13 @@
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 # Created: 2023-05-05T11:30:55+0200
-# Last modified: 2023-05-05T11:36:05+0200
+# Last modified: 2023-05-05T11:49:21+0200
 
 # Compilation flags for optimized libraries.
-#CFLAGS = -pipe -O2 -Wall -Wstrict-prototypes -fomit-frame-pointer -fPIC
+#CFLAGS = -pipe -O2 -Wall -Wstrict-prototypes -fomit-frame-pointer -fPIC -march=native
 
 # The next line is for building debugging libraries.
-CFLAGS = -pipe -g -Wall -Wstrict-prototypes -fPIC
+CFLAGS = -pipe -g -Wall -Wextra -Wstrict-prototypes -Wpedantic -fPIC -Wstrict-overflow -fno-strict-aliasing -Wno-missing-field-initializers
 
 # Extra libraries to be linked.
 LIBS = 
@@ -48,7 +48,7 @@ XTRA_DIST =
 .SUFFIXES: .c .o
 
 .PHONY:	clean help all shared static install_shared install_static \
-install uninstall dist backup is_root check_dir
+install uninstall dist backup is_root check_dir format
 
 NUM2      = $(VERSION_MAJOR).$(VERSION_MINOR)
 NUM3      = $(VERSION_MAJOR).$(VERSION_MINOR).$(PATCHLEVEL)
@@ -66,7 +66,6 @@ help:;	@echo "Use one of the following invocations:";\
 		echo "  \"make shared\"         to build the shared library";\
 		echo "  \"make static\"         to build a static library";\
 		echo "  \"make all\"            to build both libraries";\
-#		echo "  \"make test\"           to build test programs";\
 		echo "  \"make depend\"         to update the dependancies";\
 		echo "  \"make clean\"          to remove all generated files";\
 		echo "  \"make ps\"             to build man-pages in PostScript";\
@@ -97,6 +96,9 @@ $(SHARED):	$(OBJS)
 $(STATIC): $(OBJS)
 	ar crus $(STATIC) $(OBJS)
 #	strip -g $(STATIC)
+
+format::
+	clang-format15 -style="{BasedOnStyle: llvm, IndentWidth: 4, AllowShortFunctionsOnASingleLine: None, KeepEmptyLinesAtTheStartOfBlocks: false}" -i $(HDRS) $(SRC)
 
 # Remove all files that can be created by this makefile.
 clean:;

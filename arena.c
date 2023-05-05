@@ -7,10 +7,10 @@
  *  Last modified: 2023-05-05T11:28:16+0200
  */
 
-#include <assert.h>
-#include <string.h> /* for memset */
-#include <sys/mman.h> /* for mmap, munmap */
 #include "arena.h"
+#include <assert.h>
+#include <string.h>   /* for memset */
+#include <sys/mman.h> /* for mmap, munmap */
 
 void arena_create(Arena *arena, size_t length) {
     assert(arena != 0);
@@ -20,7 +20,8 @@ void arena_create(Arena *arena, size_t length) {
     arena->length = length;
     arena->used = 0;
     arena->storage = 0;
-    void *allocated = mmap(0, length, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, 0);
+    void *allocated =
+        mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
     assert(allocated != MAP_FAILED);
     arena->storage = (uint8_t *)allocated;
 }
