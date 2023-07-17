@@ -4,13 +4,19 @@
  *  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
  *  SPDX-License-Identifier: MIT
  *  Created: 2023-04-23T22:08:02+0200
- *  Last modified: 2023-05-05T12:42:44+0200
+ *  Last modified: 2023-07-17T20:29:01+0200
  */
 
 #include "arena.h"
 #include <assert.h>
 #include <string.h>   /* for memset */
 #include <sys/mman.h> /* for mmap, munmap */
+
+struct arena {
+    size_t length;
+    size_t used;
+    uint8_t *storage;
+};
 
 void arena_create(Arena *arena, size_t length) {
     assert(arena != 0);
