@@ -1,16 +1,16 @@
-/*  file: arena.c
- *  vim:fileencoding=utf-8:fdm=marker:ft=c
- *
- *  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
- *  SPDX-License-Identifier: MIT
- *  Created: 2023-04-23T22:08:02+0200
- *  Last modified: 2023-07-17T20:29:01+0200
- */
+//  file: arena.c
+//  vim:fileencoding=utf-8:fdm=marker:ft=c
+//
+//  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
+//  SPDX-License-Identifier: MIT
+//  Created: 2023-04-23T22:08:02+0200
+//  Last modified: 2024-05-20T09:10:49+0200
 
-#include "arena.h"
 #include <assert.h>
-#include <string.h>   /* for memset */
-#include <sys/mman.h> /* for mmap, munmap */
+#include <string.h>   // for memset
+#include <sys/mman.h> // for mmap, munmap
+#include <sys/types.h> // for size_t, uint8_t
+#include "arena.h"
 
 struct arena {
     size_t length;
@@ -57,4 +57,4 @@ void arena_destroy(Arena *arena) {
     arena->storage = 0;
 }
 
-/* EOF */
+// EOF arena.c
