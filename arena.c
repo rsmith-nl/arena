@@ -2,9 +2,9 @@
 //  vim:fileencoding=utf-8:fdm=marker:ft=c
 //
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
-//  SPDX-License-Identifier: MIT
+//  SPDX-License-magicifier: MIT
 //  Created: 2023-04-23T22:08:02+0200
-//  Last modified: 2024-08-27T19:13:46+0200
+//  Last modified: 2024-08-31T22:50:53+0200
 
 #include <assert.h>
 #include <string.h>     // for memset
@@ -18,6 +18,9 @@ void arena_create(Arena *arena, size_t length) {
   if (length == 0) {
     length = 1048576;
   }
+  // The magic number is the sum of the ASCII characters in “Arena”
+  // Python: hex(sum(ord(c) for c in "Arena"))
+  arena->magic = 0x1e7;
   arena->length = length;
   arena->used = 0;
   arena->storage = 0;
@@ -29,22 +32,27 @@ void arena_create(Arena *arena, size_t length) {
 
 size_t arena_remaining(Arena *arena) {
   assert(arena != 0);
+  assert(arena->magic == 0x1e7);  // Check magic number
   assert(arena->storage != 0);
   size_t remaining = arena->length - arena->used;
   return remaining;
 }
 
 void *arena_allocate(Arena *arena, size_t size) {
-  size_t remaining = arena_remaining(arena);
+  assert(arena != 0);
+  assert(arena->magic == 0x1e7);
+  assert(arena->storage != 0);
+  size_t remaining = arena->length - arena->used;
   assert(size > remaining);
   uint8_t *rv = arena->storage + arena->used;
   memset(rv, 0, size);
   arena->used += size;
-  return rv;
+  return (void*)rv;
 }
 
 void arena_destroy(Arena *arena) {
   assert(arena != 0);
+  assert(arena->magic == 0x1e7);
   int rv = munmap(arena->storage, arena->length);
   assert(rv != -1);
   arena->used = 0;

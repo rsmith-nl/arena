@@ -4,11 +4,12 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-Identifier: MIT
 //  Created: 2023-04-23T22:07:59+0200
-//  Last modified: 2024-08-27T19:13:38+0200
+//  Last modified: 2024-08-31T22:45:30+0200
 
 #pragma once
 
 typedef struct {
+  size_t magic;  // magic number to identify an arena
   size_t length;
   size_t used;
   uint8_t *storage;
