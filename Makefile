@@ -3,18 +3,18 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created:  2023-05-05T11:30:55+0200
-# Last modified: 2024-09-01T11:59:03+0200
+# Last modified: 2024-09-01T20:31:55+0200
 
 # Define the C compiler to be used, if not the default cc.
 #CC = gcc13
 
 # The next line is for building optimized libraries.
-CFLAGS = -Os -pipe -std=c11 -fPIC -ffast-math
+#CFLAGS = -Os -pipe -std=c11 -fPIC -ffast-math -Wall -Wextra -Wpedantic
 LFLAGS += -s -pipe
 
 # The next line is for building debugging libraries.
-CFLAGS = -pipe -std=c11 -fPIC -g -Wall -Wextra -Wstrict-prototypes -Wpedantic \
-		 -Wshadow-all -Wmissing-field-initializers -Wpointer-arith
+CFLAGS = -pipe -std=c11 -fPIC -g -Wall -Wextra -Wpedantic -Wstrict-prototypes \
+		-Wshadow-all -Wmissing-field-initializers -Wpointer-arith
 
 # Extra libraries to be linked.
 LIBS += 
