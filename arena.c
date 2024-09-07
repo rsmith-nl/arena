@@ -4,15 +4,13 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-magicifier: MIT
 //  Created: 2023-04-23T22:08:02+0200
-//  Last modified: 2024-09-01T20:36:54+0200
+//  Last modified: 2024-09-07T23:26:56+0200
 
-#include <stddef.h>    // for size_t, ptrdiff_t, alignof
-#include <stdint.h>    // for uint8_t
+#include "arena.h"
 #include <stdio.h>     // for printf
 #include <stdlib.h>    // for abort
 #include <string.h>    // for memset
 #include <sys/mman.h>  // for mmap, munmap
-#include "arena.h"
 
 #undef error
 #define error(...)                                            \
