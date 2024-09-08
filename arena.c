@@ -18,7 +18,8 @@
   fprintf(stderr, __VA_ARGS__);                               \
   abort()
 
-Arena arena_create(ptrdiff_t length) {
+Arena arena_create(ptrdiff_t length)
+{
   Arena arena = {0};
   // Default length 1 MiB.
   if (length <= 0) {
@@ -28,7 +29,7 @@ Arena arena_create(ptrdiff_t length) {
   // Python: hex(sum(ord(c) for c in "Arena"))
   arena.magic = 0x1e7;
   arena.begin =
-      mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+    mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (arena.begin == MAP_FAILED) {
     error("arena allocation of size %zd failed\n", length);
   }
@@ -37,7 +38,8 @@ Arena arena_create(ptrdiff_t length) {
   return arena;
 }
 
-size_t arena_remaining(Arena *arena) {
+size_t arena_remaining(Arena *arena)
+{
   if (arena == 0) {
     error("null pointer used for arena\n");
   }
@@ -48,7 +50,8 @@ size_t arena_remaining(Arena *arena) {
   return remaining;
 }
 
-void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align) {
+void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align)
+{
   if (arena == 0) {
     error("null pointer used for arena\n");
   }
@@ -66,7 +69,8 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
   return memset(rv, 0, count * size);
 }
 
-void arena_destroy(Arena *arena) {
+void arena_destroy(Arena *arena)
+{
   if (arena == 0) {
     error("null pointer used for arena\n");
   }
