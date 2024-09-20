@@ -4,12 +4,13 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-Identifier: MIT
 //  Created: 2023-04-23T22:07:59+0200
-//  Last modified: 2024-09-20T19:36:43+0200
+//  Last modified: 2024-09-20T22:49:29+0200
 
 #pragma once
 
 #include <stdint.h>    // for uint8_t, int32_t
 #include <stddef.h>    // for size_t, ptrdiff_t, alignof
+#include <stdalign.h>  // for alignof
 
 typedef struct {
   uint32_t magic;  // magic number to identify an arena
