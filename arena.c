@@ -4,7 +4,7 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-magicifier: MIT
 //  Created: 2023-04-23T22:08:02+0200
-//  Last modified: 2024-09-07T23:26:56+0200
+//  Last modified: 2024-09-20T19:37:34+0200
 
 #include "arena.h"
 #include <stdio.h>     // for printf
@@ -18,6 +18,10 @@
   fprintf(stderr, __VA_ARGS__);                               \
   abort()
 
+// In [9]: '0x' + ''.join([hex(ord(j))[2:] for j in "AREN"])
+// Out[9]: '0x4152454e'
+#define ARENA_MAGIC 0x4152454e
+
 Arena arena_create(ptrdiff_t length)
 {
   Arena arena = {0};
@@ -27,7 +31,7 @@ Arena arena_create(ptrdiff_t length)
   }
   // The magic number is the sum of the ASCII characters in “Arena”
   // Python: hex(sum(ord(c) for c in "Arena"))
-  arena.magic = 0x1e7;
+  arena.magic = ARENA_MAGIC;
   arena.begin =
     mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (arena.begin == MAP_FAILED) {
@@ -43,7 +47,7 @@ size_t arena_remaining(Arena *arena)
   if (arena == 0) {
     error("null pointer used for arena\n");
   }
-  if (arena->magic != 0x1e7) {
+  if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d\n", (void*)arena, arena->magic);
   }
   size_t remaining = arena->end - arena->cur;
@@ -55,7 +59,7 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
   if (arena == 0) {
     error("null pointer used for arena\n");
   }
-  if (arena->magic != 0x1e7) {
+  if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d\n", (void *)arena, arena->magic);
   }
   ptrdiff_t padding = -(uintptr_t)arena->cur & (align - 1);
@@ -74,7 +78,7 @@ void arena_destroy(Arena *arena)
   if (arena == 0) {
     error("null pointer used for arena\n");
   }
-  if (arena->magic != 0x1e7) {
+  if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d\n", (void *)arena, arena->magic);
   }
   int rv = munmap(arena->begin, arena->end - arena->begin);
