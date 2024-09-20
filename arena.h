@@ -4,7 +4,7 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-Identifier: MIT
 //  Created: 2023-04-23T22:07:59+0200
-//  Last modified: 2024-09-07T23:26:50+0200
+//  Last modified: 2024-09-20T19:36:43+0200
 
 #pragma once
 
@@ -12,7 +12,7 @@
 #include <stddef.h>    // for size_t, ptrdiff_t, alignof
 
 typedef struct {
-  int32_t magic;  // magic number to identify an arena
+  uint32_t magic;  // magic number to identify an arena
   uint8_t *begin;
   uint8_t *cur;
   uint8_t *end;
@@ -30,5 +30,5 @@ extern void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count,
 extern void arena_destroy(Arena *arena);
 
 #ifdef __cplusplus
-extern "C" {
+}
 #endif
