@@ -4,7 +4,7 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-magicifier: MIT
 //  Created: 2023-04-23T22:08:02+0200
-//  Last modified: 2024-09-20T19:37:34+0200
+//  Last modified: 2024-09-21T12:21:36+0200
 
 #include "arena.h"
 #include <stdio.h>     // for printf
@@ -64,7 +64,7 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
   }
   ptrdiff_t padding = -(uintptr_t)arena->cur & (align - 1);
   ptrdiff_t remaining = arena->end - arena->cur - padding;
-  if (size > remaining) {
+  if (count > remaining/size) {
     error("arena %p exhausted; %zd requested, %zd available\n", (void *)arena,
           count * size, remaining);
   }
