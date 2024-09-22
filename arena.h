@@ -4,7 +4,7 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-Identifier: MIT
 //  Created: 2023-04-23T22:07:59+0200
-//  Last modified: 2024-09-20T22:49:29+0200
+//  Last modified: 2024-09-22T16:58:11+0200
 
 #pragma once
 
@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 extern Arena arena_create(ptrdiff_t length);
-extern size_t arena_remaining(Arena *arena);
+extern ptrdiff_t arena_remaining(Arena *arena);
 extern void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count,
                          ptrdiff_t align);
 #define arena_new(a, t, n) (t *)arena_alloc(a, sizeof(t), n, alignof(t))

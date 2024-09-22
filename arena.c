@@ -4,7 +4,7 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-magicifier: MIT
 //  Created: 2023-04-23T22:08:02+0200
-//  Last modified: 2024-09-21T12:21:36+0200
+//  Last modified: 2024-09-22T17:11:28+0200
 
 #include "arena.h"
 #include <stdio.h>     // for printf
@@ -17,6 +17,20 @@
   fprintf(stderr, "ERROR %s, line %i: ", __FILE__, __LINE__); \
   fprintf(stderr, __VA_ARGS__);                               \
   abort()
+
+#ifdef NDEBUG
+#define debug(...)  ((void)0)
+#define info(...) ((void)0)
+#else
+#define debug(...) \
+  fprintf(stderr, "DEBUG %s, line %i: ", __FILE__, __LINE__); \
+  fprintf(stderr, __VA_ARGS__); \
+  fprintf(stderr, "\n")
+#define info(...)                                            \
+  fprintf(stderr, "INFO %s, line %i: ", __FILE__, __LINE__); \
+  fprintf(stderr, __VA_ARGS__); \
+  fprintf(stderr, "\n")
+#endif  // NDEBUG
 
 // In [9]: '0x' + ''.join([hex(ord(j))[2:] for j in "AREN"])
 // Out[9]: '0x4152454e'
@@ -35,14 +49,15 @@ Arena arena_create(ptrdiff_t length)
   arena.begin =
     mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (arena.begin == MAP_FAILED) {
-    error("arena allocation of size %zd failed\n", length);
+    error("arena allocation of size %td failed\n", length);
   }
+  info("arena; %td bytes allocated", length);
   arena.cur = arena.begin;
   arena.end = arena.begin + length;
   return arena;
 }
 
-size_t arena_remaining(Arena *arena)
+ptrdiff_t arena_remaining(Arena *arena)
 {
   if (arena == 0) {
     error("null pointer used for arena\n");
@@ -50,7 +65,7 @@ size_t arena_remaining(Arena *arena)
   if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d\n", (void*)arena, arena->magic);
   }
-  size_t remaining = arena->end - arena->cur;
+  ptrdiff_t remaining = arena->end - arena->cur;
   return remaining;
 }
 
@@ -65,8 +80,8 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
   ptrdiff_t padding = -(uintptr_t)arena->cur & (align - 1);
   ptrdiff_t remaining = arena->end - arena->cur - padding;
   if (count > remaining/size) {
-    error("arena %p exhausted; %zd requested, %zd available\n", (void *)arena,
-          count * size, remaining);
+    error("arena %p exhausted; %td items of %td bytes requested, %td available\n",
+        (void *)arena, count, size, remaining/size);
   }
   void *rv = arena->cur + padding;
   arena->cur += padding + count * size;
