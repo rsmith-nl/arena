@@ -3,7 +3,7 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created:  2023-05-05T11:30:55+0200
-# Last modified: 2024-09-01T20:31:55+0200
+# Last modified: 2024-09-29T22:18:50+0200
 
 # Define the C compiler to be used, if not the default cc.
 #CC = gcc13
@@ -74,7 +74,7 @@ LOG 		 = ChangeLog
 INSTALL   = install
 
 # This is the default target.
-help::
+help:
 	@echo "Command  Meaning"
 	@echo "-------  -------"
 	@sed -n -e '/##/s/:.*\#\# /\t/p' -e '/@sed/d' Makefile
@@ -98,6 +98,12 @@ clean:  ## remove all generated files
 	-rm -f $(OBJS) core *~ $(SHARED) $(STATIC) $(TARFILE) \
 	$(LOG) $(TEST) $(MPAGES:.3=.ps) \
 	$(MPAGES:.3=.txt) $(MPAGES:.3=.html)
+
+style:  ## reformat source code using astyle.
+	astyle -n *.c *.h
+
+tidy:  ## Run static code checker clang-tidy.
+	clang-tidy15 --quiet *.c *.h
 
 # Check if the user has root privileges.
 is_root:
