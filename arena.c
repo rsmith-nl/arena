@@ -81,7 +81,7 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
   ptrdiff_t remaining = arena->end - arena->cur - padding;
   if (count > remaining/size) {
     error("arena %p exhausted; %td items of %td bytes requested, %td available\n",
-        (void *)arena, count, size, remaining/size);
+          (void *)arena, count, size, remaining/size);
   }
   void *rv = arena->cur + padding;
   arena->cur += padding + count * size;
