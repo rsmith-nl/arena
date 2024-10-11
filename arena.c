@@ -4,7 +4,7 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-magicifier: MIT
 //  Created: 2023-04-23T22:08:02+0200
-//  Last modified: 2024-09-22T17:11:28+0200
+//  Last modified: 2024-10-11T09:51:45+0200
 
 #include "arena.h"
 #include <stdio.h>     // for printf
@@ -43,8 +43,6 @@ Arena arena_create(ptrdiff_t length)
   if (length <= 0) {
     length = 1048576;
   }
-  // The magic number is the sum of the ASCII characters in “Arena”
-  // Python: hex(sum(ord(c) for c in "Arena"))
   arena.magic = ARENA_MAGIC;
   arena.begin =
     mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
