@@ -4,7 +4,7 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-magicifier: MIT
 //  Created: 2023-04-23T22:08:02+0200
-//  Last modified: 2024-10-11T09:51:45+0200
+//  Last modified: 2025-04-13T15:04:18+0200
 
 #include "arena.h"
 #include <stdio.h>     // for printf
@@ -51,7 +51,9 @@ Arena arena_create(ptrdiff_t length)
   }
   info("arena; %td bytes allocated", length);
   arena.cur = arena.begin;
-  arena.end = arena.begin + length;
+  // Do *not* write to the location pointed to by guard!
+  // it is outside the allocated area.
+  arena.guard = arena.begin + length;
   return arena;
 }
 
@@ -63,7 +65,7 @@ ptrdiff_t arena_remaining(Arena *arena)
   if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d\n", (void*)arena, arena->magic);
   }
-  ptrdiff_t remaining = arena->end - arena->cur;
+  ptrdiff_t remaining = arena->guard - arena->cur;
   return remaining;
 }
 
@@ -76,7 +78,7 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
     error("invalid arena %p; magic %d\n", (void *)arena, arena->magic);
   }
   ptrdiff_t padding = -(uintptr_t)arena->cur & (align - 1);
-  ptrdiff_t remaining = arena->end - arena->cur - padding;
+  ptrdiff_t remaining = arena->guard - arena->cur - padding;
   if (count > remaining/size) {
     error("arena %p exhausted; %td items of %td bytes requested, %td available\n",
           (void *)arena, count, size, remaining/size);
@@ -94,7 +96,7 @@ void arena_destroy(Arena *arena)
   if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d\n", (void *)arena, arena->magic);
   }
-  int rv = munmap(arena->begin, arena->end - arena->begin);
+  int rv = munmap(arena->begin, arena->guard - arena->begin);
   if (rv == -1) {
     error("destroying arena %p failed\n", (void *)arena);
   }

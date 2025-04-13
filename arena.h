@@ -4,7 +4,7 @@
 //  Copyright © 2023 R.F. Smith <rsmith@xs4all.nl>
 //  SPDX-License-Identifier: MIT
 //  Created: 2023-04-23T22:07:59+0200
-//  Last modified: 2024-09-22T16:58:11+0200
+//  Last modified: 2025-04-13T14:55:01+0200
 
 #pragma once
 
@@ -16,7 +16,7 @@ typedef struct {
   uint32_t magic;  // magic number to identify an arena
   uint8_t *begin;
   uint8_t *cur;
-  uint8_t *end;
+  uint8_t *guard;
 } Arena;
 
 #ifdef __cplusplus
