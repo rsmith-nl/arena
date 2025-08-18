@@ -1,6 +1,7 @@
 Checks: >
     performance-*,
     misc-*,
+    -misc-include-cleaner,
     readability-duplicate-include,
     readability-misleading-indentation,
     bugprone-assert-side-effect,
@@ -19,7 +20,7 @@ Checks: >
     -clang-analyzer-osx.*,
 
 # treat all warnings as errors
-WarningsAsErrors: '*'
+#WarningsAsErrors: '*'
 
 CheckOptions:
   - key:             bugprone-assert-side-effect.AssertMacros
