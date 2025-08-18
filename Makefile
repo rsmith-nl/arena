@@ -3,18 +3,23 @@
 #
 # Author: R.F. Smith <rsmith@xs4all.nl>
 # Created:  2023-05-05T11:30:55+0200
-# Last modified: 2024-09-29T22:18:50+0200
+# Last modified: 2025-08-18T10:54:17+0200
 
 # Define the C compiler to be used, if not the default cc.
 #CC = gcc13
 
-# The next line is for building optimized libraries.
-#CFLAGS = -Os -pipe -std=c11 -fPIC -ffast-math -Wall -Wextra -Wpedantic
-LFLAGS += -s -pipe
+# The next lines are for debug builds.
+CFLAGS = -pipe -std=c11 -fPIC -g3 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
+		-Wshadow-all -Wmissing-field-initializers -Wpointer-arith \
+		-fsanitize=address,undefined
+LFLAGS += -s -pipe -fmerge-constants -fsanitize=address,undefined
 
-# The next line is for building debugging libraries.
-CFLAGS = -pipe -std=c11 -fPIC -g -Wall -Wextra -Wpedantic -Wstrict-prototypes \
-		-Wshadow-all -Wmissing-field-initializers -Wpointer-arith
+.ifdef NDEBUG
+# The next lines are for release builds.
+CFLAGS = -Os -pipe -std=c11 -fPIC -ffast-math -march=native
+CFLAGS += -DNDEBUG=1
+LFLAGS = -s -pipe -fmerge-constants -flto
+.endif
 
 # Extra libraries to be linked.
 LIBS += 
@@ -103,7 +108,7 @@ style:  ## reformat source code using astyle.
 	astyle -n *.c *.h
 
 tidy:  ## Run static code checker clang-tidy.
-	clang-tidy15 --quiet *.c *.h
+	clang-tidy19 --quiet *.c *.h
 
 # Check if the user has root privileges.
 is_root:
