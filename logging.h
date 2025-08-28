@@ -1,54 +1,67 @@
 // file: logging.h
 // vim:fileencoding=utf-8:ft=c:tabstop=2
+// This is free and unencumbered software released into the public domain.
 //
-// Copyright © 2025 R.F. Smith <rsmith@xs4all.nl>
-// SPDX-License-Identifier: MIT
+// Author: R.F. Smith <rsmith@xs4all.nl>
+// SPDX-License-Identifier: Unlicense
 // Created: 2025-08-04 00:49:24 +0200
-// Last modified: 2025-08-18T10:59:33+0200
+// Last modified: 2025-08-28T22:15:16+0200
 
 #pragma once
 
-#include <stdio.h>    // for fprintf, stderr
+#include <stdio.h>    // for fprintf, stderr, fflush
 #include <stdlib.h>   // for abort
 
+#undef error
 #ifndef NDEBUG
-#undef debug
-#define debug(...)                                            \
-  fprintf(stderr, "DEBUG %s, line %i: ", __FILE__, __LINE__); \
-  fprintf(stderr, __VA_ARGS__)
+#define error(...) \
+  fprintf(stderr, "# ERROR %s, line %i: ", __FILE__, __LINE__); \
+  fprintf(stderr, __VA_ARGS__); \
+  fprintf(stderr, "\n"); \
+  fflush(stderr); \
+  abort()
 #else
+#define error(...) \
+  fprintf(stderr, "# ERROR: "); \
+  fprintf(stderr, __VA_ARGS__); \
+  fprintf(stderr, "\n"); \
+  fflush(stderr); \
+  abort()
+#endif  // NDEBUG
+
 #undef debug
+#ifndef NDEBUG
+#define debug(...) \
+  fprintf(stderr, "# DEBUG %s, line %i: ", __FILE__, __LINE__); \
+  fprintf(stderr, __VA_ARGS__); \
+  fprintf(stderr, "\n"); \
+  fflush(stderr)
+#else
 #define debug(...) (void)0
 #endif  // NDEBUG
 
-#undef error
-#define error(...)                                            \
-  fprintf(stderr, "ERROR %s, line %i: ", __FILE__, __LINE__); \
-  fprintf(stderr, __VA_ARGS__);                               \
-  abort()
-
+#undef warn
 #ifndef NDEBUG
-#undef warn
 #define warn(...)                                            \
-  fprintf(stderr, "WARNING %s, line %i: ", __FILE__, __LINE__); \
+  fprintf(stderr, "# WARNING %s, line %i: ", __FILE__, __LINE__); \
   fprintf(stderr, __VA_ARGS__); \
-  fprintf(stderr, "\n")
+  fprintf(stderr, "\n"); \
+  fflush(stderr)
 #else
-#undef warn
-#define warn(...) (void)0
+#define warn(...) \
+  fprintf(stderr, "# WARNING: "); \
+  fprintf(stderr, __VA_ARGS__); \
+  fprintf(stderr, "\n"); \
+  fflush(stderr)
 #endif  // NDEBUG
 
-
+#undef info
 #ifndef NDEBUG
-#undef info
-#define info(...)                                            \
-  fprintf(stderr, "INFO %s, line %i: ", __FILE__, __LINE__); \
+#define info(...) \
+  fprintf(stderr, "# INFO %s, line %i: ", __FILE__, __LINE__); \
   fprintf(stderr, __VA_ARGS__); \
-  fprintf(stderr, "\n")
+  fprintf(stderr, "\n"); \
+  fflush(stderr)
 #else
-#undef info
 #define info(...) (void)0
 #endif  // NDEBUG
-
-#undef UNUSED
-#define UNUSED(x)(void)(x)
