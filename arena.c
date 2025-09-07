@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2023-04-23T22:08:02+0200
-// Last modified: 2025-09-07T23:41:22+0200
+// Last modified: 2025-09-08T00:12:46+0200
 
 #include "arena.h"
 #include "logging.h"
@@ -58,7 +58,7 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
   if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d\n", (void *)arena, arena->magic);
   }
-  ptrdiff_t padding = -(uintptr_t)arena->cur & (align - 1);
+  ptrdiff_t padding = -arena->cur & (align - 1);
   ptrdiff_t remaining = arena->length - arena->cur - padding;
   if (count > remaining/size) {
     error("arena %p exhausted; %td items of %td bytes requested, %td available\n",
