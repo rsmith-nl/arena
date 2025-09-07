@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2023-04-23T22:08:02+0200
-// Last modified: 2025-08-28T22:12:28+0200
+// Last modified: 2025-09-07T23:41:22+0200
 
 #include "arena.h"
 #include "logging.h"
@@ -27,16 +27,15 @@ Arena arena_create(ptrdiff_t length)
     length = 1048576;
   }
   arena.magic = ARENA_MAGIC;
+  // using mmap for memory should return a page aligned address.
   arena.begin =
     mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (arena.begin == MAP_FAILED) {
     error("arena allocation of size %td failed\n", length);
   }
   info("arena; %td bytes allocated", length);
-  arena.cur = arena.begin;
-  // Do *not* write to the location pointed to by guard!
-  // it is outside the allocated area.
-  arena.guard = arena.begin + length;
+  arena.cur = 0;
+  arena.length = length;
   return arena;
 }
 
@@ -48,8 +47,7 @@ ptrdiff_t arena_remaining(Arena *arena)
   if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d\n", (void*)arena, arena->magic);
   }
-  ptrdiff_t remaining = arena->guard - arena->cur;
-  return remaining;
+  return arena->length - arena->cur;
 }
 
 void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align)
@@ -61,12 +59,12 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
     error("invalid arena %p; magic %d\n", (void *)arena, arena->magic);
   }
   ptrdiff_t padding = -(uintptr_t)arena->cur & (align - 1);
-  ptrdiff_t remaining = arena->guard - arena->cur - padding;
+  ptrdiff_t remaining = arena->length - arena->cur - padding;
   if (count > remaining/size) {
     error("arena %p exhausted; %td items of %td bytes requested, %td available\n",
           (void *)arena, count, size, remaining/size);
   }
-  void *rv = arena->cur + padding;
+  void *rv = arena->begin + arena->cur + padding;
   arena->cur += padding + count * size;
   return memset(rv, 0, count * size);
 }
@@ -81,7 +79,7 @@ void arena_destroy(Arena *arena)
     error("invalid arena %p; magic %d ignored\n", (void *)arena, arena->magic);
     return;
   }
-  int rv = munmap(arena->begin, arena->guard - arena->begin);
+  int rv = munmap(arena->begin, arena->length);
   if (rv == -1) {
     error("destroying arena %p failed\n", (void *)arena);
   }
@@ -97,5 +95,8 @@ void arena_empty(Arena *arena)
   if (arena->magic != ARENA_MAGIC) {
     error("invalid arena %p; magic %d ignored\n", (void *)arena, arena->magic);
   }
-  arena->cur = arena->begin;
+  // Clrear memory to the current offset
+  memset(arena->begin, 0, arena->cur);
+  // Set the offset to 0.
+  arena->cur = 0;
 }
