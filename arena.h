@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2023-04-23T22:07:59+0200
-// Last modified: 2025-09-07T23:32:32+0200
+// Last modified: 2025-09-08T00:15:00+0200
 
 // Inspired by: https://nullprogram.com/blog/2023/09/27/
 
@@ -18,7 +18,7 @@
 typedef struct {
   uint32_t magic;  // magic number to identify an arena
   uint8_t *begin;
-  ptrdiff_t cur;
+  ptrdiff_t offs;
   ptrdiff_t length;
 } Arena;
 
