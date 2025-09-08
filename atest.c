@@ -1,11 +1,11 @@
-// file: arena_test.c
+// file: atest.c
 // vim:fileencoding=utf-8:ft=c:tabstop=2
 // This is free and unencumbered software released into the public domain.
 //
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-09-08 20:48:54 +0200
-// Last modified: 2025-09-08T21:42:40+0200
+// Last modified: 2025-09-08T22:14:54+0200
 
 #include "arena.h"
 #include <stddef.h>

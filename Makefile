@@ -7,7 +7,7 @@ check:  ## checks if the code builds cleanly.
 	rm -f *.o
 
 atest:  ## builds the test program.
-	$(CC) $(CFLAGS) -o atest arena_test.c arena.c
+	$(CC) $(CFLAGS) -o atest atest.c arena.c
 
 .PHONY: clean
 clean:
