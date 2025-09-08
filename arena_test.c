@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-09-08 20:48:54 +0200
-// Last modified: 2025-09-08T21:24:09+0200
+// Last modified: 2025-09-08T21:42:40+0200
 
 #include "arena.h"
 #include <stddef.h>
@@ -42,9 +42,15 @@ int main(int argc, char *argv[]) {
     test(std.current_offset == size);
     test(arena_remaining(&std) == (4096 - size));
     test(memcmp(std.begin, "// file: arena.c", 16) == 0);
-    arena_empty(&std);
-    puts("After empying the arena.");
-    test(std.current_offset == 0);
   }
+  arena_empty(&std);
+  puts("After empying the arena.");
+  test(std.current_offset == 0);
+  arena_destroy(&std);
+  puts("After destroying the arena.");
+  test(std.magic == 0);
+  test(std.begin == 0);
+  test(std.current_offset == 0);
+  test(std.length == 0);
   return 0;
 }
