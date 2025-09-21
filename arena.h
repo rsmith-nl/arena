@@ -5,18 +5,17 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2023-04-23T22:07:59+0200
-// Last modified: 2025-09-08T20:36:15+0200
+// Last modified: 2025-09-21T08:28:44+0200
 
 // Inspired by: https://nullprogram.com/blog/2023/09/27/
 
 #pragma once
 
-#include <stdint.h>    // for uint8_t, int32_t
+#include <stdint.h>    // for uint8_t
 #include <stddef.h>    // for size_t, ptrdiff_t, alignof
 #include <stdalign.h>  // for alignof
 
 typedef struct {
-  uint32_t magic;  // magic number to identify an arena
   uint8_t *begin;
   ptrdiff_t current_offset;
   ptrdiff_t length;
