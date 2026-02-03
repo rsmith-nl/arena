@@ -24,7 +24,8 @@
   while (0)
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   (void)argc;
   (void)argv;
   Arena std = arena_create(4096);
