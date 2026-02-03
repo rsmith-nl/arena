@@ -5,10 +5,11 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2023-04-23T22:08:02+0200
-// Last modified: 2025-09-21T08:29:45+0200
+// Last modified: 2026-02-03T22:12:08+0100
 
 #include "arena.h"
 #include "logging.h"
+#include <assert.h>
 #include <stdio.h>      // for printf
 #include <stdint.h>     // for uintptr_t
 #include <stddef.h>     // for ptrdiff_t
@@ -36,11 +37,15 @@ Arena arena_create(ptrdiff_t length)
 
 ptrdiff_t arena_remaining(Arena *arena)
 {
+  assert(arena!=0);
   return arena->length - arena->current_offset;
 }
 
 void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align)
 {
+  assert(arena!=0);
+  assert(size>0);
+  assert(count>0);
   ptrdiff_t padding = -arena->current_offset & (align - 1);
   ptrdiff_t remaining = arena->length - arena->current_offset - padding;
   if (count > remaining/size) {
@@ -54,6 +59,7 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
 
 void arena_destroy(Arena *arena)
 {
+  assert(arena!=0);
   int rv = munmap(arena->begin, arena->length);
   if (rv == -1) {
     error("destroying arena %p failed\n", (void *)arena);
@@ -64,6 +70,7 @@ void arena_destroy(Arena *arena)
 
 void arena_empty(Arena *arena)
 {
+  assert(arena!=0);
   // Clear all the used memory.
   memset(arena->begin, 0, arena->current_offset);
   // Reset the use counter.
