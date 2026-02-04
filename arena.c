@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2023-04-23T22:08:02+0200
-// Last modified: 2026-02-03T22:12:08+0100
+// Last modified: 2026-02-04T19:52:35+0100
 
 #include "arena.h"
 #include "logging.h"
@@ -14,7 +14,12 @@
 #include <stdint.h>     // for uintptr_t
 #include <stddef.h>     // for ptrdiff_t
 #include <string.h>     // for memset
+#ifdef _WIN32
+#include <memoryapi.h>
+#define MAP_FAILED ((void *)-1)
+#else
 #include <sys/mman.h>   // for mmap, munmap
+#endif
 
 Arena arena_create(ptrdiff_t length)
 {
@@ -23,9 +28,14 @@ Arena arena_create(ptrdiff_t length)
   if (length <= 0) {
     length = 1048576;
   }
-  // using mmap for memory should return a page aligned address.
-  arena.begin =
-    mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+#ifdef _WIN32
+  arena.begin = VirtualAlloc(0, length, MEM_COMMIT|MEM_RESERVE, PAGE_READWRITE);
+  if (arena.begin == 0) {
+    arena.begin = MAP_FAILED;
+  }
+#else
+  arena.begin = mmap(0, length, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+#endif
   if (arena.begin == MAP_FAILED) {
     error("arena allocation of size %td failed\n", length);
   }
