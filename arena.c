@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2023-04-23T22:08:02+0200
-// Last modified: 2026-02-04T19:52:35+0100
+// Last modified: 2026-02-04T20:06:58+0100
 
 #include "arena.h"
 #include "logging.h"
@@ -70,7 +70,15 @@ void *arena_alloc(Arena *arena, ptrdiff_t size, ptrdiff_t count, ptrdiff_t align
 void arena_destroy(Arena *arena)
 {
   assert(arena!=0);
-  int rv = munmap(arena->begin, arena->length);
+  int rv;
+#ifdef _WIN32
+  rv = VirtualFree(arena->begin, 0, MEM_RELEASE|MEM_DECOMMIT);
+  if (rv == 0) {
+    rv = -1;
+  }
+#else
+  rv = munmap(arena->begin, arena->length);
+#endif
   if (rv == -1) {
     error("destroying arena %p failed\n", (void *)arena);
   }
