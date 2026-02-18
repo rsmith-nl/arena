@@ -6,7 +6,7 @@ check:  ## checks if the code builds cleanly.
 	clang-tidy19 --quiet *.c *.h 2>/dev/null
 	rm -f *.o
 
-atest:  ## builds the test program.
+atest: arena.c arena.h  ## builds the test program.
 	$(CC) $(CFLAGS) -o atest atest.c arena.c
 
 .PHONY: clean
