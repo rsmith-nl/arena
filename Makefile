@@ -3,7 +3,6 @@ CFLAGS = -pipe -std=c11 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
 
 check:  ## checks if the code builds cleanly.
 	$(CC) $(CFLAGS) -c arena.c
-	clang-tidy19 --quiet *.c *.h 2>/dev/null
 	rm -f *.o
 
 atest: arena.c arena.h  ## builds the test program.
@@ -16,6 +15,10 @@ clean:
 .PHONY: style
 style:  ## Reformat source code using astyle.
 	astyle -n *.c *.h
+
+.PHONY: tidy
+tidy:  ## Check the code with clang-tidy
+	clang-tidy19 --quiet *.c *.h 2>/dev/null
 
 .PHONY: help
 help:  ## List available commands
