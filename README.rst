@@ -5,7 +5,7 @@ Arena allocation for C
 :tags: C programming, memory management, public domain
 :author: Roland Smith
 
-.. Last modified: 2026-02-22T00:45:44+0100
+.. Last modified: 2026-02-22T00:52:50+0100
 .. vim:spelllang=en
 
 Introduction
@@ -48,4 +48,4 @@ Just copy the source files (``arena.h``, ``arena.c`` and ``logging.h``) in to
 your project, and hook them up to the build.
 
 The included ``Makefile`` builds the code for testing and can build a test
-program with ``make test``.
+program with ``make atest``.
