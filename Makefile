@@ -1,11 +1,7 @@
 CFLAGS = -pipe -std=c11 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
                 -Wshadow -Wmissing-field-initializers -Wpointer-arith
 
-check:  ## checks if the code builds cleanly.
-	$(CC) $(CFLAGS) -c arena.c
-	rm -f *.o
-
-atest: arena.c arena.h  ## builds the test program.
+atest: atest.c arena.c arena.h ## builds the test program (default).
 	$(CC) $(CFLAGS) -o atest atest.c arena.c
 
 .PHONY: clean
