@@ -5,7 +5,7 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-09-08 20:48:54 +0200
-// Last modified: 2026-03-16T00:29:11+0100
+// Last modified: 2026-03-16T22:54:06+0100
 
 #include "arena.h"
 #include <stddef.h>
@@ -41,8 +41,9 @@ int main(int argc, char *argv[])
   (void)argc;
   (void)argv;
   int failcount = 0;
+  puts(PURPLE"Starting the tests."RESET);
   Arena std = arena_create(4096);
-  puts(PURPLE"After creating the arena."RESET);
+  puts(CYAN"After creating the arena."RESET);
   test(std.current_offset == 0);
   test(std.length == 4096);
   char *fname = "arena.c";
@@ -51,16 +52,16 @@ int main(int argc, char *argv[])
   if (f) {
     fread(arena_new(&std, char, size), size, 1, f);
     fclose(f);
-    puts(PURPLE"After adding to the arena."RESET);
+    puts(CYAN"After adding to the arena."RESET);
     test(std.current_offset == size);
     test(arena_remaining(&std) == (4096 - size));
     test(memcmp(std.begin, "// file: arena.c", 16) == 0);
   }
   arena_empty(&std);
-  puts(PURPLE"After empying the arena."RESET);
+  puts(CYAN"After empying the arena."RESET);
   test(std.current_offset == 0);
   arena_destroy(&std);
-  puts(PURPLE"After destroying the arena."RESET);
+  puts(CYAN"After destroying the arena."RESET);
   test(std.begin == 0);
   test(std.current_offset == 0);
   test(std.length == 0);
