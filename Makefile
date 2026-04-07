@@ -5,10 +5,10 @@
 CFLAGS = -pipe -std=c11 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
                 -Wshadow -Wmissing-field-initializers -Wpointer-arith
 
-all: atest single_header/arena.h
+all: test single_header/arena.h
 
-atest: atest.c arena.c arena.h ## builds the test program (default).
-	$(CC) $(CFLAGS) -o atest atest.c arena.c
+test: test.c single_header/arena.h ## builds the test program (default).
+	$(CC) $(CFLAGS) -o test test.c
 
 single_header/arena.h: arena.c arena.h  ## Build single header library (POSIX only).
 	cp arena.h single_header/arena.h
@@ -20,7 +20,7 @@ single_header/arena.h: arena.c arena.h  ## Build single header library (POSIX on
 
 .PHONY: clean
 clean:
-	rm -f *.o atest single_header/arena.h
+	rm -f *.o test single_header/arena.h
 
 .PHONY: style
 style:  ## Reformat source code using astyle.

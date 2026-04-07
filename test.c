@@ -5,9 +5,10 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-09-08 20:48:54 +0200
-// Last modified: 2026-03-16T22:54:06+0100
+// Last modified: 2026-04-08T00:00:59+0200
 
-#include "arena.h"
+#define ARENA_IMPLEMENTATION
+#include "single_header/arena.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
