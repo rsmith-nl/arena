@@ -5,7 +5,7 @@ Arena allocation for C
 :tags: C programming, memory management, public domain
 :author: Roland Smith
 
-.. Last modified: 2026-04-07T00:48:36+0200
+.. Last modified: 2026-05-10T13:18:57+0200
 .. vim:spelllang=en
 
 Introduction
@@ -18,6 +18,13 @@ This code was inspired by and based on `Arena allocator tips and tricks`_ by Chr
 Error handling is done using the ``error`` macro from ``logging.h``
 
 For me, using arenas has been a *huge* improvement over ``malloc()``/``free()``.
+
+
+No AI policy
+============
+
+This code is by a human and for humans.
+"AI" / LLM-generated rewrites and additions are not welcome.
 
 
 Implementation
