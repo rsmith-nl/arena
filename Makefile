@@ -20,7 +20,7 @@ single_header/arena.h: arena.c arena.h  ## Build single header library (POSIX on
 	echo "#endif // ARENA_IMPLEMENTATION" >>single_header/arena.h
 
 .PHONY: clean
-clean:
+clean:  ## Remove generated files
 	rm -f *.o test
 
 .PHONY: style
