@@ -5,10 +5,9 @@
 // Author: R.F. Smith <rsmith@xs4all.nl>
 // SPDX-License-Identifier: Unlicense
 // Created: 2025-09-08 20:48:54 +0200
-// Last modified: 2026-04-08T00:00:59+0200
+// Last modified: 2026-10-25T18:42:33+0100
 
-#define ARENA_IMPLEMENTATION
-#include "single_header/arena.h"
+#include "arena.c"
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -36,12 +35,16 @@
     } \
   while (0)
 
+#ifndef VERSION
+#define VERSION "UNKNOWN"
+#endif
 
 int main(int argc, char *argv[])
 {
   (void)argc;
   (void)argv;
   int failcount = 0;
+    puts("Built from test.c and arena.c, version "VERSION);
   puts(PURPLE"Starting the tests."RESET);
   Arena std = arena_create(4096);
   puts(CYAN"After creating the arena."RESET);

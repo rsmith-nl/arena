@@ -1,14 +1,14 @@
 # vim:fileencoding=utf-8:ft=make
-# Use as many jobs as the computer has cores.
-.MAKEFLAGS: -j C
 
 CFLAGS = -pipe -std=c11 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
                 -Wshadow -Wmissing-field-initializers -Wpointer-arith
 
+GIT_VERSION != git describe --dirty --always --tags
+
 all: test single_header/arena.h
 
-test: test.c single_header/arena.h ## builds the test program (default).
-	$(CC) $(CFLAGS) -o test test.c
+test: test.c arena.c arena.h ## builds the test program (default).
+	$(CC) $(CFLAGS) -DVERSION="\"${GIT_VERSION}\"" -o test test.c
 
 single_header/arena.h: arena.c arena.h  ## Build single header library (POSIX only).
 	cp arena.h single_header/arena.h
