@@ -1,7 +1,8 @@
 # vim:fileencoding=utf-8:ft=make
 
-CFLAGS = -pipe -std=c11 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
-                -Wshadow -Wmissing-field-initializers -Wpointer-arith
+CFLAGS = -pipe -g -std=c11 -Wall -Wextra -Wstrict-prototypes -Wpedantic \
+         -Wshadow-all -Wmissing-field-initializers -Wpointer-arith \
+         -fsanitize=address,undefined
 
 GIT_VERSION != git describe --dirty --always --tags
 
@@ -20,7 +21,7 @@ single_header/arena.h: arena.c arena.h  ## Build single header library (POSIX on
 
 .PHONY: clean
 clean:
-	rm -f *.o test single_header/arena.h
+	rm -f *.o test
 
 .PHONY: style
 style:  ## Reformat source code using astyle.
